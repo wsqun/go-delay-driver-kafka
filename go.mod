@@ -1,0 +1,5 @@
+module github.com/wsqun/go-delay-driver-kafka
+
+go 1.14
+
+require github.com/Shopify/sarama v1.27.0
