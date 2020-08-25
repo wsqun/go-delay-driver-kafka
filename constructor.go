@@ -21,9 +21,22 @@ func (dk *DKafka) initCfg(opt... OptFn) (err error) {
 }
 
 // 初始化消费者
-func (dk *DKafka) initConsumer() (err error) {
-	dk.consumer, err = sarama.NewConsumerGroup(dk.addrs, dk.groupId, dk.cfg)
-	return err
+func (dk *DKafka) getConsumer(topic string) (*consumer, error) {
+	defer dk.lockConsumer.Unlock()
+	dk.lockConsumer.Lock()
+	if consumer,exist := dk.consumerMap[topic];exist {
+		return consumer,nil
+	}
+	cli,err := sarama.NewConsumerGroup(dk.addrs, dk.groupId, dk.cfg)
+	if err != nil {
+		return nil, err
+	}
+	dk.consumerMap[topic] = &consumer{
+		cil:   cli,
+		ready: make(chan bool),
+	}
+	//dk.consumerMap[topic], err = sarama.NewConsumerGroup(dk.addrs, dk.groupId, dk.cfg)
+	return dk.consumerMap[topic],nil
 }
 
 // 初始化生产者

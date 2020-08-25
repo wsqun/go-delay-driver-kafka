@@ -9,6 +9,7 @@ import (
 type consumer struct {
 	ready chan bool
 	fn func([]byte)(err error)
+	cil sarama.ConsumerGroup
 }
 
 // Setup is run at the beginning of a new session, before ConsumeClaim
