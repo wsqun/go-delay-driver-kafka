@@ -8,6 +8,9 @@ import (
 // 初始化配置
 func (dk *DKafka) initCfg(opt... OptFn) (err error) {
 	dk.cfg = sarama.NewConfig()
+	dk.cfg.Version, _ = sarama.ParseKafkaVersion("2.1.1")
+	// 消费者
+	dk.cfg.Consumer.Offsets.Initial = sarama.OffsetNewest
 	// 生产者
 	dk.cfg.Producer.RequiredAcks = sarama.WaitForAll
 	dk.cfg.Producer.Partitioner = sarama.NewRandomPartitioner
