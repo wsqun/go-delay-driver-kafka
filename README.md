@@ -1,4 +1,4 @@
-## go-delay-driver-kafka
+## go-driver-kafka
 
 ### how to use
 https://github.com/wsqun/go-delay-queue
